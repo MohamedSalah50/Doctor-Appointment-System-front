@@ -1,27 +1,35 @@
-// app/page.tsx
 "use client";
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/auth-context";
+import { Loader2 } from "lucide-react";
 
 export default function HomePage() {
   const router = useRouter();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isLoading } = useAuth();
 
   useEffect(() => {
     if (!isLoading) {
-      if (isAuthenticated) {
-        router.push("/dashboard");
+      if (user) {
+        // User is logged in, redirect based on role
+        if (user.role === "doctor") {
+          router.push("/doctor/dashboard");
+        } else if (user.role === "patient") {
+          router.push("/patient/dashboard");
+        } else {
+          router.push("/auth/login");
+        }
       } else {
-        router.push("/login");
+        // User is not logged in, go to login
+        router.push("/auth/login");
       }
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [user, isLoading, router]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+    <div className="flex h-screen items-center justify-center">
+      <Loader2 className="h-8 w-8 animate-spin text-primary" />
     </div>
   );
 }

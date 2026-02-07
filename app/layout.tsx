@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" dir="ltr">
+    <html lang="ar" dir="rtl">
       <body className={cairo.className}>
         <QueryProvider>
           <AuthProvider>
@@ -36,7 +36,7 @@ export default function RootLayout({
               closeButton
               toastOptions={{
                 style: {
-                  direction: 'ltr',
+                  direction: 'rtl',
                 },
               }}
             />

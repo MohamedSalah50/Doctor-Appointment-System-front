@@ -1,4 +1,4 @@
-// app/(auth)/signup/page.tsx
+// app/auth/signup/page.tsx (COMPLETE FIXED VERSION)
 
 "use client";
 
@@ -17,7 +17,7 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -25,8 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { Alert, AlertDescription } from "@/components/ui/alert";
-// import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import {
   Mail,
@@ -38,11 +36,10 @@ import {
   User,
   Phone,
   Calendar,
-//   AlertCircle,
-  UserPlus,
   ChevronRight,
   ChevronLeft,
   Check,
+  UserPlus,
 } from "lucide-react";
 import { RoleEnum, GenderEnum, SpecialtyEnum, DegreeEnum, BloodTypeEnum } from "@/lib/types/api.types";
 import { getErrorMessage, getSpecialtyLabel } from "@/lib/utils";
@@ -76,59 +73,71 @@ export default function SignupPage() {
     degree: "" as DegreeEnum,
     licenseNumber: "",
     yearsOfExperience: "",
-    bio: "",
     consultationFeeInClinic: "",
     consultationFeeOnline: "",
   });
 
   const handleInputChange = (field: string, value: any) => {
+    // ✅ FIX: Remove spaces from password fields
+    if (field === 'password' || field === 'confirmPassword') {
+      value = value.replace(/\s/g, ''); // Remove all whitespace
+    }
+    
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const validateStep1 = (): boolean => {
     if (!formData.fullName.trim()) {
-      toast.error("من فضلك أدخل الاسم الكامل");
+      toast.error("Please enter your full name");
       return false;
     }
 
-    if (formData.fullName.length < 3) {
-      toast.error("الاسم يجب أن يكون 3 أحرف على الأقل");
+    if (formData.fullName.trim().length < 3) {
+      toast.error("Name must be at least 3 characters");
       return false;
     }
 
     if (!formData.userName.trim()) {
-      toast.error("من فضلك أدخل اسم المستخدم");
+      toast.error("Please enter a username");
       return false;
     }
 
-    if (formData.userName.length < 3) {
-      toast.error("اسم المستخدم يجب أن يكون 3 أحرف على الأقل");
+    if (formData.userName.trim().length < 3) {
+      toast.error("Username must be at least 3 characters");
       return false;
     }
 
     if (!formData.email.trim()) {
-      toast.error("من فضلك أدخل البريد الإلكتروني");
+      toast.error("Please enter your email");
       return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      toast.error("البريد الإلكتروني غير صحيح");
+      toast.error("Invalid email format");
       return false;
     }
 
     if (!formData.password) {
-      toast.error("من فضلك أدخل كلمة المرور");
+      toast.error("Please enter a password");
       return false;
     }
 
     if (formData.password.length < 6) {
-      toast.error("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
+      toast.error("Password must be at least 6 characters");
       return false;
     }
 
+    if (!formData.confirmPassword) {
+      toast.error("Please confirm your password");
+      return false;
+    }
+
+    // ✅ FIX: Direct comparison (spaces already removed)
     if (formData.password !== formData.confirmPassword) {
-      toast.error("كلمة المرور غير متطابقة");
+      toast.error("Passwords do not match");
+      console.log("Password:", formData.password);
+      console.log("Confirm Password:", formData.confirmPassword);
       return false;
     }
 
@@ -137,44 +146,45 @@ export default function SignupPage() {
 
   const validateStep2 = (): boolean => {
     if (!formData.phoneNumber.trim()) {
-      toast.error("من فضلك أدخل رقم الهاتف");
+      toast.error("Please enter your phone number");
       return false;
     }
 
     if (!formData.gender) {
-      toast.error("من فضلك اختر النوع");
+      toast.error("Please select your gender");
       return false;
     }
 
     if (!formData.dateOfBirth) {
-      toast.error("من فضلك أدخل تاريخ الميلاد");
+      toast.error("Please enter your date of birth");
       return false;
     }
 
     // Doctor-specific validation
     if (userType === "doctor") {
       if (!formData.specialty) {
-        toast.error("من فضلك اختر التخصص");
+        toast.error("Please select your specialty");
         return false;
       }
 
       if (!formData.degree) {
-        toast.error("من فضلك اختر الدرجة العلمية");
+        toast.error("Please select your degree");
         return false;
       }
 
       if (!formData.licenseNumber.trim()) {
-        toast.error("من فضلك أدخل رقم الترخيص");
+        toast.error("Please enter your license number");
         return false;
       }
 
       if (!formData.yearsOfExperience) {
-        toast.error("من فضلك أدخل سنوات الخبرة");
+        toast.error("Please enter years of experience");
         return false;
       }
 
-      if (parseInt(formData.yearsOfExperience) < 0 || parseInt(formData.yearsOfExperience) > 70) {
-        toast.error("سنوات الخبرة غير صحيحة");
+      const years = parseInt(formData.yearsOfExperience);
+      if (years < 0 || years > 70) {
+        toast.error("Invalid years of experience");
         return false;
       }
     }
@@ -202,11 +212,11 @@ export default function SignupPage() {
     }
 
     const signupData: any = {
-      fullName: formData.fullName,
-      userName: formData.userName,
-      email: formData.email,
-      password: formData.password,
-      phoneNumber: formData.phoneNumber,
+      fullName: formData.fullName.trim(),
+      userName: formData.userName.trim(),
+      email: formData.email.trim(),
+      password: formData.password, // Already has no spaces
+      phoneNumber: formData.phoneNumber.trim(),
       gender: formData.gender,
       dateOfBirth: formData.dateOfBirth,
       role: userType === "doctor" ? RoleEnum.doctor : RoleEnum.patient,
@@ -219,7 +229,7 @@ export default function SignupPage() {
     } else if (userType === "doctor") {
       signupData.specialty = formData.specialty;
       signupData.degree = formData.degree;
-      signupData.licenseNumber = formData.licenseNumber;
+      signupData.licenseNumber = formData.licenseNumber.trim();
       signupData.yearsOfExperience = parseInt(formData.yearsOfExperience);
       
       if (formData.consultationFeeInClinic || formData.consultationFeeOnline) {
@@ -230,23 +240,26 @@ export default function SignupPage() {
       }
     }
 
+    console.log("Signup data:", signupData);
+
     signup(signupData, {
       onSuccess: () => {
         toast.success(
           userType === "doctor"
-            ? "تم التسجيل بنجاح! سيتم مراجعة حسابك قريباً"
-            : "تم التسجيل بنجاح! يمكنك تسجيل الدخول الآن"
+            ? "Registration successful! Your account will be reviewed soon"
+            : "Registration successful! You can now log in"
         );
-        router.push("/login");
+        router.push("/auth/login"); // ✅ Fixed route
       },
       onError: (error) => {
+        console.error("Signup error:", error);
         toast.error(getErrorMessage(error));
       },
     });
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center py-12">
+    <div className="flex min-h-screen items-center justify-center py-12 px-4">
       <Card className="w-full max-w-2xl shadow-2xl border-0">
         <CardHeader className="space-y-1 text-center pb-8">
           <div className="flex justify-center mb-4">
@@ -254,11 +267,11 @@ export default function SignupPage() {
               <UserPlus className="h-10 w-10 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-3xl font-bold">إنشاء حساب جديد</CardTitle>
+          <CardTitle className="text-3xl font-bold">Create Account</CardTitle>
           <CardDescription className="text-base">
             {userType === "doctor"
-              ? "انضم كطبيب واستقبل المرضى أونلاين"
-              : "سجل كمريض واحجز موعدك مع أفضل الأطباء"}
+              ? "Join as a doctor and manage your practice"
+              : "Register as a patient and book appointments"}
           </CardDescription>
 
           {/* Progress Indicator */}
@@ -275,7 +288,7 @@ export default function SignupPage() {
             />
           </div>
           <p className="text-sm text-muted-foreground">
-            الخطوة {step} من 2
+            Step {step} of 2
           </p>
         </CardHeader>
 
@@ -292,11 +305,11 @@ export default function SignupPage() {
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="patient" className="gap-2">
                 <User className="h-4 w-4" />
-                مريض
+                Patient
               </TabsTrigger>
               <TabsTrigger value="doctor" className="gap-2">
                 <Stethoscope className="h-4 w-4" />
-                طبيب
+                Doctor
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -308,10 +321,10 @@ export default function SignupPage() {
                 <div className="grid gap-4 md:grid-cols-2">
                   {/* Full Name */}
                   <div className="space-y-2">
-                    <Label htmlFor="fullName">الاسم الكامل *</Label>
+                    <Label htmlFor="fullName">Full Name *</Label>
                     <Input
                       id="fullName"
-                      placeholder="أحمد محمد علي"
+                      placeholder="John Doe"
                       value={formData.fullName}
                       onChange={(e) =>
                         handleInputChange("fullName", e.target.value)
@@ -322,10 +335,10 @@ export default function SignupPage() {
 
                   {/* Username */}
                   <div className="space-y-2">
-                    <Label htmlFor="userName">اسم المستخدم *</Label>
+                    <Label htmlFor="userName">Username *</Label>
                     <Input
                       id="userName"
-                      placeholder="ahmed_m"
+                      placeholder="john_doe"
                       value={formData.userName}
                       onChange={(e) =>
                         handleInputChange("userName", e.target.value)
@@ -337,9 +350,9 @@ export default function SignupPage() {
 
                 {/* Email */}
                 <div className="space-y-2">
-                  <Label htmlFor="email">البريد الإلكتروني *</Label>
+                  <Label htmlFor="email">Email *</Label>
                   <div className="relative">
-                    <Mail className="absolute right-3 top-3 h-5 w-5 text-muted-foreground" />
+                    <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                     <Input
                       id="email"
                       type="email"
@@ -348,17 +361,18 @@ export default function SignupPage() {
                       onChange={(e) =>
                         handleInputChange("email", e.target.value)
                       }
-                      className="pr-10"
+                      className="pl-10"
                       disabled={isPending}
+                      dir="ltr"
                     />
                   </div>
                 </div>
 
                 {/* Password */}
                 <div className="space-y-2">
-                  <Label htmlFor="password">كلمة المرور *</Label>
+                  <Label htmlFor="password">Password *</Label>
                   <div className="relative">
-                    <Lock className="absolute right-3 top-3 h-5 w-5 text-muted-foreground" />
+                    <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
@@ -367,13 +381,14 @@ export default function SignupPage() {
                       onChange={(e) =>
                         handleInputChange("password", e.target.value)
                       }
-                      className="pr-10 pl-10"
+                      className="pl-10 pr-10"
                       disabled={isPending}
+                      dir="ltr"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute left-3 top-3 text-muted-foreground hover:text-foreground"
+                      className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
                     >
                       {showPassword ? (
                         <EyeOff className="h-5 w-5" />
@@ -382,13 +397,16 @@ export default function SignupPage() {
                       )}
                     </button>
                   </div>
+                  <p className="text-xs text-muted-foreground">
+                    At least 6 characters, no spaces
+                  </p>
                 </div>
 
                 {/* Confirm Password */}
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">تأكيد كلمة المرور *</Label>
+                  <Label htmlFor="confirmPassword">Confirm Password *</Label>
                   <div className="relative">
-                    <Lock className="absolute right-3 top-3 h-5 w-5 text-muted-foreground" />
+                    <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                     <Input
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
@@ -397,15 +415,16 @@ export default function SignupPage() {
                       onChange={(e) =>
                         handleInputChange("confirmPassword", e.target.value)
                       }
-                      className="pr-10 pl-10"
+                      className="pl-10 pr-10"
                       disabled={isPending}
+                      dir="ltr"
                     />
                     <button
                       type="button"
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
                       }
-                      className="absolute left-3 top-3 text-muted-foreground hover:text-foreground"
+                      className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
                     >
                       {showConfirmPassword ? (
                         <EyeOff className="h-5 w-5" />
@@ -422,8 +441,8 @@ export default function SignupPage() {
                   className="w-full"
                   disabled={isPending}
                 >
-                  التالي
-                  <ChevronLeft className="mr-2 h-4 w-4" />
+                  Next
+                  <ChevronRight className="mr-2 h-4 w-4" />
                 </Button>
               </div>
             )}
@@ -434,26 +453,27 @@ export default function SignupPage() {
                 <div className="grid gap-4 md:grid-cols-2">
                   {/* Phone */}
                   <div className="space-y-2">
-                    <Label htmlFor="phoneNumber">رقم الهاتف *</Label>
+                    <Label htmlFor="phoneNumber">Phone Number *</Label>
                     <div className="relative">
-                      <Phone className="absolute right-3 top-3 h-5 w-5 text-muted-foreground" />
+                      <Phone className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                       <Input
                         id="phoneNumber"
                         type="tel"
-                        placeholder="+201234567890"
+                        placeholder="+1234567890"
                         value={formData.phoneNumber}
                         onChange={(e) =>
                           handleInputChange("phoneNumber", e.target.value)
                         }
-                        className="pr-10"
+                        className="pl-10"
                         disabled={isPending}
+                        dir="ltr"
                       />
                     </div>
                   </div>
 
                   {/* Gender */}
                   <div className="space-y-2">
-                    <Label htmlFor="gender">النوع *</Label>
+                    <Label htmlFor="gender">Gender *</Label>
                     <Select
                       value={formData.gender}
                       onValueChange={(value) =>
@@ -462,11 +482,11 @@ export default function SignupPage() {
                       disabled={isPending}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="اختر النوع" />
+                        <SelectValue placeholder="Select gender" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={GenderEnum.male}>ذكر</SelectItem>
-                        <SelectItem value={GenderEnum.female}>أنثى</SelectItem>
+                        <SelectItem value={GenderEnum.male}>Male</SelectItem>
+                        <SelectItem value={GenderEnum.female}>Female</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -474,9 +494,9 @@ export default function SignupPage() {
 
                 {/* Date of Birth */}
                 <div className="space-y-2">
-                  <Label htmlFor="dateOfBirth">تاريخ الميلاد *</Label>
+                  <Label htmlFor="dateOfBirth">Date of Birth *</Label>
                   <div className="relative">
-                    <Calendar className="absolute right-3 top-3 h-5 w-5 text-muted-foreground" />
+                    <Calendar className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                     <Input
                       id="dateOfBirth"
                       type="date"
@@ -484,7 +504,7 @@ export default function SignupPage() {
                       onChange={(e) =>
                         handleInputChange("dateOfBirth", e.target.value)
                       }
-                      className="pr-10"
+                      className="pl-10"
                       disabled={isPending}
                       max={new Date().toISOString().split("T")[0]}
                     />
@@ -494,7 +514,7 @@ export default function SignupPage() {
                 {/* Patient-specific fields */}
                 {userType === "patient" && (
                   <div className="space-y-2">
-                    <Label htmlFor="bloodType">فصيلة الدم (اختياري)</Label>
+                    <Label htmlFor="bloodType">Blood Type (Optional)</Label>
                     <Select
                       value={formData.bloodType}
                       onValueChange={(value) =>
@@ -503,7 +523,7 @@ export default function SignupPage() {
                       disabled={isPending}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="اختر فصيلة الدم" />
+                        <SelectValue placeholder="Select blood type" />
                       </SelectTrigger>
                       <SelectContent>
                         {Object.values(BloodTypeEnum).map((type) => (
@@ -522,7 +542,7 @@ export default function SignupPage() {
                     <div className="grid gap-4 md:grid-cols-2">
                       {/* Specialty */}
                       <div className="space-y-2">
-                        <Label htmlFor="specialty">التخصص *</Label>
+                        <Label htmlFor="specialty">Specialty *</Label>
                         <Select
                           value={formData.specialty}
                           onValueChange={(value) =>
@@ -531,7 +551,7 @@ export default function SignupPage() {
                           disabled={isPending}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="اختر التخصص" />
+                            <SelectValue placeholder="Select specialty" />
                           </SelectTrigger>
                           <SelectContent>
                             {Object.values(SpecialtyEnum).map((spec) => (
@@ -545,7 +565,7 @@ export default function SignupPage() {
 
                       {/* Degree */}
                       <div className="space-y-2">
-                        <Label htmlFor="degree">الدرجة العلمية *</Label>
+                        <Label htmlFor="degree">Degree *</Label>
                         <Select
                           value={formData.degree}
                           onValueChange={(value) =>
@@ -554,7 +574,7 @@ export default function SignupPage() {
                           disabled={isPending}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="اختر الدرجة" />
+                            <SelectValue placeholder="Select degree" />
                           </SelectTrigger>
                           <SelectContent>
                             {Object.values(DegreeEnum).map((deg) => (
@@ -570,7 +590,7 @@ export default function SignupPage() {
                     <div className="grid gap-4 md:grid-cols-2">
                       {/* License Number */}
                       <div className="space-y-2">
-                        <Label htmlFor="licenseNumber">رقم الترخيص *</Label>
+                        <Label htmlFor="licenseNumber">License Number *</Label>
                         <Input
                           id="licenseNumber"
                           placeholder="LIC-2024-12345"
@@ -585,7 +605,7 @@ export default function SignupPage() {
                       {/* Years of Experience */}
                       <div className="space-y-2">
                         <Label htmlFor="yearsOfExperience">
-                          سنوات الخبرة *
+                          Years of Experience *
                         </Label>
                         <Input
                           id="yearsOfExperience"
@@ -609,7 +629,7 @@ export default function SignupPage() {
                     <div className="grid gap-4 md:grid-cols-2">
                       <div className="space-y-2">
                         <Label htmlFor="consultationFeeInClinic">
-                          سعر الكشف في العيادة (جنيه)
+                          In-Clinic Fee (Optional)
                         </Label>
                         <Input
                           id="consultationFeeInClinic"
@@ -629,7 +649,7 @@ export default function SignupPage() {
 
                       <div className="space-y-2">
                         <Label htmlFor="consultationFeeOnline">
-                          سعر الاستشارة أونلاين (جنيه)
+                          Online Fee (Optional)
                         </Label>
                         <Input
                           id="consultationFeeOnline"
@@ -659,8 +679,8 @@ export default function SignupPage() {
                     className="flex-1"
                     disabled={isPending}
                   >
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                    السابق
+                    <ChevronLeft className="mr-2 h-4 w-4" />
+                    Back
                   </Button>
                   <Button
                     type="submit"
@@ -669,13 +689,13 @@ export default function SignupPage() {
                   >
                     {isPending ? (
                       <>
-                        <Loader2 className="ml-2 h-4 w-4 animate-spin" />
-                        جاري التسجيل...
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Creating account...
                       </>
                     ) : (
                       <>
-                        <Check className="ml-2 h-4 w-4" />
-                        إنشاء الحساب
+                        <Check className="mr-2 h-4 w-4" />
+                        Create Account
                       </>
                     )}
                   </Button>
@@ -687,12 +707,12 @@ export default function SignupPage() {
 
         <CardFooter className="flex flex-col space-y-4 border-t pt-6">
           <div className="text-center text-sm">
-            <span className="text-muted-foreground">لديك حساب بالفعل؟ </span>
+            <span className="text-muted-foreground">Already have an account? </span>
             <Link
-              href="/login"
+              href="/auth/login"
               className="text-primary font-semibold hover:underline"
             >
-              تسجيل الدخول
+              Log in
             </Link>
           </div>
         </CardFooter>

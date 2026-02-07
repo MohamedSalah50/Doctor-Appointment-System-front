@@ -29,36 +29,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Public routes that don't require authentication
   const publicRoutes = [
     "/",
-    "/login",
-    "/signup",
+    "/auth/login",
+    "/auth/signup",
     "/doctors",
     "/about",
     "/contact",
   ];
-  
-  const isPublicRoute = publicRoutes.some((route) => 
-    pathname === route || pathname.startsWith(`${route}/`)
+
+  const isPublicRoute = publicRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
   useEffect(() => {
     // Wait for initial load
     if (!isLoading && !isFetching) {
       const user = data?.data;
-      
+
       // Not authenticated and trying to access protected route
       if (!user && !isPublicRoute) {
-        router.push("/login");
+        router.push("/auth/login");
+        return;
       }
-      
+
       // Authenticated and trying to access auth pages
-      if (user && (pathname === "/login" || pathname === "/signup")) {
+      if (user && (pathname === "/auth/login" || pathname === "/auth/signup")) {
         // Redirect based on role
         if (user.role === "doctor") {
           router.push("/doctor/dashboard");
         } else if (user.role === "patient") {
-          router.push("/dashboard");
-        } else if (user.role === "admin") {
-          router.push("/admin/dashboard");
+          router.push("/patient/dashboard");
+        }
+        return;
+      }
+
+      // Check role-based access
+      if (user) {
+        // Doctor trying to access patient routes
+        if (user.role === "doctor" && pathname.startsWith("/patient")) {
+          router.push("/doctor/dashboard");
+          return;
+        }
+
+        // Patient trying to access doctor routes
+        if (user.role === "patient" && pathname.startsWith("/doctor")) {
+          router.push("/patient/dashboard");
+          return;
         }
       }
     }
