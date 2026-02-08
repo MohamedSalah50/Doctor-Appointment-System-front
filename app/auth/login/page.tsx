@@ -1,4 +1,4 @@
-// app/auth/login/page.tsx (FINAL - Based on Real Response)
+// app/auth/login/page.tsx (UPDATED - No Manual Redirect)
 
 "use client";
 
@@ -19,12 +19,12 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
-import { 
-  Mail, 
-  Lock, 
-  Eye, 
-  EyeOff, 
-  Loader2, 
+import {
+  Mail,
+  Lock,
+  Eye,  
+  EyeOff,
+  Loader2,
   Stethoscope,
   AlertCircle,
   LogIn,
@@ -65,31 +65,27 @@ export default function LoginPage() {
     // Make API call
     login(formData, {
       onSuccess: (response) => {
-        console.log("Full response:", response);
-        
-        // ✅ Response structure: { message, data: { credentials: { access_token, refresh_token } }, status }
+        console.log("Login response:", response);
+
         const credentials = response.data?.credentials;
-        
-        console.log("Credentials:", credentials);
-        
+
         if (!credentials || !credentials.access_token) {
           toast.error("Login failed - no credentials received");
-          console.error("Response structure:", response);
+          console.error("Response:", response);
           return;
         }
 
-        // ✅ Tokens are already saved by useLogin hook's onSuccess
-        // Now we need to get the user data from the token or make another call
-        
-        toast.success("Login successful");
-        
-        // ✅ Since we don't have user data in login response,
-        // the AuthContext will fetch it using useCurrentUser hook
-        // after tokens are saved. Just wait a bit and redirect to root.
-        
-        setTimeout(() => {
-          router.push("/"); // Will redirect based on role in AuthContext
-        }, 500);
+        console.log("Tokens saved successfully");
+        toast.success("Login successful! Redirecting...");
+
+        router.push("/doctor/dashboard");
+
+        // ✅ FIX: Don't manually redirect!
+        // Let AuthContext handle it after fetching user data
+        // The useCurrentUser hook will automatically run after tokens are saved
+        // and AuthContext will redirect based on the user's role
+
+        // Note: We could add a loading state here if needed
       },
       onError: (error) => {
         console.error("Login error:", error);
@@ -261,7 +257,7 @@ export default function LoginPage() {
 
         <CardFooter className="flex flex-col space-y-4 border-t pt-6">
           <div className="text-center text-sm">
-            <span className="text-muted-foreground">Don&apos;t have an account? </span>
+            <span className="text-muted-foreground">Don't have an account? </span>
             <Link
               href="/auth/signup"
               className="text-primary font-semibold hover:underline"

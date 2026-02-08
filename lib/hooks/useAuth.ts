@@ -1,4 +1,4 @@
-// lib/hooks/useAuth.ts (FIXED)
+// lib/hooks/useAuth.ts (WITH DEBUG LOGS)
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../api/client';
@@ -17,9 +17,21 @@ export const useCurrentUser = () => {
   const hasToken =
     typeof window !== 'undefined' && !!localStorage.getItem('access_token');
   
+  console.log("useCurrentUser - hasToken:", hasToken);
+  
   return useQuery({
     queryKey: AUTH_KEYS.currentUser,
-    queryFn: () => authService.getCurrentUser(),
+    queryFn: async () => {
+      console.log("useCurrentUser - queryFn running...");
+      try {
+        const result = await authService.getCurrentUser();
+        console.log("useCurrentUser - result:", result);
+        return result;
+      } catch (error) {
+        console.error("useCurrentUser - error:", error);
+        throw error;
+      }
+    },
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: false,
     enabled: hasToken,
@@ -32,32 +44,41 @@ export const useLogin = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (credentials: ILoginCredentials) => 
-      authService.login(credentials),
+    mutationFn: (credentials: ILoginCredentials) => {
+      console.log("useLogin - mutationFn called with:", credentials);
+      return authService.login(credentials);
+    },
     
     onSuccess: (data) => {
-      console.log("useLogin onSuccess - data:", data);
+      console.log("useLogin - onSuccess triggered");
+      console.log("useLogin - response data:", data);
       
-      // ✅ FIX: New structure is { message, data: { credentials: { access_token, refresh_token } }, status }
       const credentials = data.data?.credentials;
       
+      console.log("useLogin - extracted credentials:", credentials);
+      
       if (credentials?.access_token && credentials?.refresh_token) {
-        console.log("Saving tokens...");
+        console.log("useLogin - saving tokens...");
         
-        // ✅ Save tokens with new field names
         apiClient.setToken(credentials.access_token);
         apiClient.setRefreshToken(credentials.refresh_token);
         
-        console.log("Tokens saved successfully");
-        console.log("Access token:", credentials.access_token.substring(0, 20) + "...");
+        console.log("useLogin - tokens saved");
+        console.log("useLogin - access_token:", credentials.access_token.substring(0, 30) + "...");
         
-        // Invalidate current user to trigger refetch with new token
+        console.log("useLogin - invalidating currentUser query...");
         queryClient.invalidateQueries({ 
           queryKey: AUTH_KEYS.currentUser 
         });
+        
+        console.log("useLogin - query invalidated, should trigger refetch");
       } else {
-        console.error("No credentials in response:", data);
+        console.error("useLogin - no credentials in response:", data);
       }
+    },
+    
+    onError: (error) => {
+      console.error("useLogin - onError:", error);
     },
   });
 };
