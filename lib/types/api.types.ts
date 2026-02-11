@@ -3,94 +3,94 @@
 // ==================== ENUMS ====================
 
 export enum RoleEnum {
-  patient = 'patient',
-  doctor = 'doctor',
-  admin = 'admin',
+  patient = "patient",
+  doctor = "doctor",
+  admin = "admin",
 }
 
 export enum GenderEnum {
-  male = 'male',
-  female = 'female',
+  male = "male",
+  female = "female",
 }
 
 export enum BloodTypeEnum {
-  'A+' = 'A+',
-  'A-' = 'A-',
-  'B+' = 'B+',
-  'B-' = 'B-',
-  'AB+' = 'AB+',
-  'AB-' = 'AB-',
-  'O+' = 'O+',
-  'O-' = 'O-',
+  "A+" = "A+",
+  "A-" = "A-",
+  "B+" = "B+",
+  "B-" = "B-",
+  "AB+" = "AB+",
+  "AB-" = "AB-",
+  "O+" = "O+",
+  "O-" = "O-",
 }
 
 export enum SpecialtyEnum {
-  generalPractice = 'general_practice',
-  internalMedicine = 'internal_medicine',
-  familyMedicine = 'family_medicine',
-  generalSurgery = 'general_surgery',
-  cardiacSurgery = 'cardiac_surgery',
-  neurosurgery = 'neurosurgery',
-  orthopedicSurgery = 'orthopedic_surgery',
-  plasticSurgery = 'plastic_surgery',
-  gynecology = 'gynecology',
-  obstetrics = 'obstetrics',
-  pediatrics = 'pediatrics',
-  neonatology = 'neonatology',
-  radiology = 'radiology',
-  pathology = 'pathology',
-  laboratoryMedicine = 'laboratory_medicine',
-  cardiology = 'cardiology',
-  dermatology = 'dermatology',
-  neurology = 'neurology',
-  psychiatry = 'psychiatry',
-  ophthalmology = 'ophthalmology',
-  ent = 'ent',
-  urology = 'urology',
-  gastroenterology = 'gastroenterology',
-  pulmonology = 'pulmonology',
-  nephrology = 'nephrology',
-  endocrinology = 'endocrinology',
-  rheumatology = 'rheumatology',
-  oncology = 'oncology',
-  dentistry = 'dentistry',
-  physicalTherapy = 'physical_therapy',
+  generalPractice = "general_practice",
+  internalMedicine = "internal_medicine",
+  familyMedicine = "family_medicine",
+  generalSurgery = "general_surgery",
+  cardiacSurgery = "cardiac_surgery",
+  neurosurgery = "neurosurgery",
+  orthopedicSurgery = "orthopedic_surgery",
+  plasticSurgery = "plastic_surgery",
+  gynecology = "gynecology",
+  obstetrics = "obstetrics",
+  pediatrics = "pediatrics",
+  neonatology = "neonatology",
+  radiology = "radiology",
+  pathology = "pathology",
+  laboratoryMedicine = "laboratory_medicine",
+  cardiology = "cardiology",
+  dermatology = "dermatology",
+  neurology = "neurology",
+  psychiatry = "psychiatry",
+  ophthalmology = "ophthalmology",
+  ent = "ent",
+  urology = "urology",
+  gastroenterology = "gastroenterology",
+  pulmonology = "pulmonology",
+  nephrology = "nephrology",
+  endocrinology = "endocrinology",
+  rheumatology = "rheumatology",
+  oncology = "oncology",
+  dentistry = "dentistry",
+  physicalTherapy = "physical_therapy",
 }
 
 export enum DegreeEnum {
-  md = 'MD',
-  mbbs = 'MBBS',
-  phd = 'PhD',
-  mbbch = 'MBBCh',
-  msc = 'MSc',
-  fellowship = 'Fellowship',
-  diploma = 'Diploma',
+  md = "MD",
+  mbbs = "MBBS",
+  phd = "PhD",
+  mbbch = "MBBCh",
+  msc = "MSc",
+  fellowship = "Fellowship",
+  diploma = "Diploma",
 }
 
 export enum AppointmentStatusEnum {
-  pending = 'pending',
-  confirmed = 'confirmed',
-  cancelled = 'cancelled',
-  completed = 'completed',
-  noShow = 'no_show',
-  rescheduled = 'rescheduled',
+  pending = "pending",
+  confirmed = "confirmed",
+  cancelled = "cancelled",
+  completed = "completed",
+  noShow = "no_show",
+  rescheduled = "rescheduled",
 }
 
 export enum AppointmentTypeEnum {
-  checkup = 'checkup',
-  followUp = 'follow_up',
-  consultation = 'consultation',
-  emergency = 'emergency',
-  surgery = 'surgery',
-  vaccination = 'vaccination',
-  labTest = 'lab_test',
-  imaging = 'imaging',
+  checkup = "checkup",
+  followUp = "follow_up",
+  consultation = "consultation",
+  emergency = "emergency",
+  surgery = "surgery",
+  vaccination = "vaccination",
+  labTest = "lab_test",
+  imaging = "imaging",
 }
 
 export enum ConsultationModeEnum {
-  inClinic = 'in_clinic',
-  online = 'online',
-  homeVisit = 'home_visit',
+  inClinic = "in_clinic",
+  online = "online",
+  homeVisit = "home_visit",
 }
 
 export enum DayOfWeekEnum {
@@ -104,25 +104,25 @@ export enum DayOfWeekEnum {
 }
 
 export enum ScheduleStatusEnum {
-  active = 'active',
-  inactive = 'inactive',
-  holiday = 'holiday',
+  active = "active",
+  inactive = "inactive",
+  holiday = "holiday",
 }
 
 export enum PaymentStatusEnum {
-  pending = 'pending',
-  completed = 'completed',
-  failed = 'failed',
-  refunded = 'refunded',
-  cancelled = 'cancelled',
+  pending = "pending",
+  completed = "completed",
+  failed = "failed",
+  refunded = "refunded",
+  cancelled = "cancelled",
 }
 
 export enum PaymentMethodEnum {
-  cash = 'cash',
-  creditCard = 'credit_card',
-  debitCard = 'debit_card',
-  insurance = 'insurance',
-  mobileWallet = 'mobile_wallet',
+  cash = "cash",
+  creditCard = "credit_card",
+  debitCard = "debit_card",
+  insurance = "insurance",
+  mobileWallet = "mobile_wallet",
 }
 
 // ==================== BASE INTERFACES ====================
@@ -178,10 +178,10 @@ export interface ISignupData {
   role: RoleEnum;
   gender?: GenderEnum;
   dateOfBirth?: Date | string;
-  
+
   // Patient-specific
   bloodType?: BloodTypeEnum;
-  
+
   // Doctor-specific
   specialty?: SpecialtyEnum;
   degree?: DegreeEnum;
@@ -228,7 +228,7 @@ export interface IPatient {
     zipCode?: string;
     country?: string;
   };
-  preferredLanguage?: 'ar' | 'en';
+  preferredLanguage?: "ar" | "en";
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }
@@ -457,7 +457,7 @@ export interface IClinic {
     landmark?: string;
   };
   location?: {
-    type: 'Point';
+    type: "Point";
     coordinates: [number, number];
   };
   logo?: string;
@@ -502,7 +502,7 @@ export interface IDoctorSearchFilters {
   page?: number;
   limit?: number;
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sortOrder?: "asc" | "desc";
 }
 
 export interface IAppointmentFilters {
@@ -537,4 +537,60 @@ export interface IDoctorStats {
   monthlyRevenue: number;
   averageRating: number;
   totalReviews: number;
+}
+
+// ==================== User Management ====================
+export interface ICreateUser {
+  fullName: string;
+  userName: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
+  gender: GenderEnum;
+  dateOfBirth: string | Date;
+  role: RoleEnum;
+  avatar?: string;
+
+  // Patient-specific
+  bloodType?: BloodTypeEnum;
+
+  // Doctor-specific
+  specialty?: SpecialtyEnum;
+  degree?: DegreeEnum;
+  licenseNumber?: string;
+  yearsOfExperience?: number;
+  consultationFee?: {
+    inClinic?: number;
+    online?: number;
+    homeVisit?: number;
+  };
+}
+
+export interface IUpdateUser {
+  fullName?: string;
+  userName?: string;
+  phoneNumber?: string;
+  gender?: GenderEnum;
+  dateOfBirth?: string | Date;
+  avatar?: string;
+}
+
+export interface IChangePassword {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword?: string;
+}
+
+// ==================== Pagination ====================
+
+export interface IPaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface IPaginatedResponse<T> {
+  data: T[];
+  pagination: IPaginationMeta;
 }

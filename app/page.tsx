@@ -1,3 +1,5 @@
+// app/page.tsx (UPDATED - Redirect to /dashboard)
+
 "use client";
 
 import { useEffect } from "react";
@@ -12,16 +14,10 @@ export default function HomePage() {
   useEffect(() => {
     if (!isLoading) {
       if (user) {
-        // User is logged in, redirect based on role
-        if (user.role === "doctor") {
-          router.push("/doctor/dashboard");
-        } else if (user.role === "patient") {
-          router.push("/patient/dashboard");
-        } else {
-          router.push("/auth/login");
-        }
+        // User is logged in → redirect to dashboard
+        router.push("/dashboard");
       } else {
-        // User is not logged in, go to login
+        // User is not logged in → go to login
         router.push("/auth/login");
       }
     }

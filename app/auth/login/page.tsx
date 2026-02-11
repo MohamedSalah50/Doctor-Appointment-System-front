@@ -22,7 +22,7 @@ import { toast } from "sonner";
 import {
   Mail,
   Lock,
-  Eye,  
+  Eye,
   EyeOff,
   Loader2,
   Stethoscope,
@@ -78,7 +78,7 @@ export default function LoginPage() {
         console.log("Tokens saved successfully");
         toast.success("Login successful! Redirecting...");
 
-        router.push("/doctor/dashboard");
+        router.push("/dashboard");
 
         // ✅ FIX: Don't manually redirect!
         // Let AuthContext handle it after fetching user data
@@ -122,9 +122,7 @@ export default function LoginPage() {
               <Stethoscope className="h-10 w-10 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-3xl font-bold">
-            Login
-          </CardTitle>
+          <CardTitle className="text-3xl font-bold">Login</CardTitle>
           <CardDescription className="text-base">
             Enter your credentials to access your account
           </CardDescription>
@@ -135,9 +133,7 @@ export default function LoginPage() {
           {error && (
             <Alert variant="destructive" className="mb-4">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                {getErrorMessage(error)}
-              </AlertDescription>
+              <AlertDescription>{getErrorMessage(error)}</AlertDescription>
             </Alert>
           )}
 
@@ -184,7 +180,9 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   value={formData.password}
-                  onChange={(e) => handleInputChange("password", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("password", e.target.value)
+                  }
                   className="pl-10 pr-10 h-11"
                   disabled={isPending}
                   autoComplete="current-password"
@@ -257,7 +255,9 @@ export default function LoginPage() {
 
         <CardFooter className="flex flex-col space-y-4 border-t pt-6">
           <div className="text-center text-sm">
-            <span className="text-muted-foreground">Don't have an account? </span>
+            <span className="text-muted-foreground">
+              Don't have an account?{" "}
+            </span>
             <Link
               href="/auth/signup"
               className="text-primary font-semibold hover:underline"

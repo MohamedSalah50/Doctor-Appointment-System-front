@@ -31,7 +31,7 @@ export const userService = {
       },
       message: "success",
       status: 200,
-    } as IResponse<IPaginatedResponse<IUser>>;
+    };
   },
 
   // Search users - Backend returns { data, total }
@@ -48,7 +48,7 @@ export const userService = {
       },
       message: "success",
       status: 200,
-    } as IResponse<IPaginatedResponse<IUser>>;
+    };
   },
 
   // Get users by role - Backend returns { data, total }
@@ -65,7 +65,7 @@ export const userService = {
       },
       message: "success",
       status: 200,
-    } as IResponse<IPaginatedResponse<IUser>>;
+    };
   },
 
   // Get user by ID - Backend returns { data }
